@@ -1,5 +1,5 @@
 class Api::V1::TagsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_api_v1_user!
   before_action :load_resource, except: [:index, :create]
 
   def index
