@@ -1,0 +1,1 @@
+json.partial! 'detail', tag_kind: @tag_kind

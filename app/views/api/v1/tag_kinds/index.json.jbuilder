@@ -1,0 +1,1 @@
+json.array! @tag_kinds, partial: 'detail', as: :tag_kind
