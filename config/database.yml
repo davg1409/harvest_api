@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  username: postgres
+  password: postgres
+  host: localhost
+  pool: 5
+
+development:
+  <<: *default
+  database: harvest_api_dev
+
+test:
+  <<: *default
+  database: harvest_api_test
+
+production:
+  <<: *default
+  database: harvest_api_production
