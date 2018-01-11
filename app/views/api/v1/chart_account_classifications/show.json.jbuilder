@@ -1,0 +1,1 @@
+json.partial! 'detail', cac: @cac
