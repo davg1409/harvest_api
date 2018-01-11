@@ -38,6 +38,6 @@ class Api::V1::ChartAccountsController < ApplicationController
     end
 
     def chart_account_params
-      params.require(:chart_account).permit(:name, :code, :editable, :deletable, :balance, :dc, :classification_id, :parent_id)
+      params.require(:chart_account).permit(:name, :parent_id)
     end
 end
