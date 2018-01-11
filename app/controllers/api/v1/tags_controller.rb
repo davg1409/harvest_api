@@ -1,14 +1,14 @@
 class Api::V1::TagsController < ApplicationController
   before_action :authenticate_api_v1_user!
+  before_action :require_account!
   before_action :load_resource, except: [:index, :create]
 
   def index
-    @tags = Tag.all
+    @tags = @account.tags
   end
 
   def create
-    @tag = Tag.new tag_params
-    @tag.account_id = current_api_v1_user.account_id
+    @tag = @account.tags.new tag_params
 
     if @tag.save
       render :show
@@ -35,7 +35,7 @@ class Api::V1::TagsController < ApplicationController
 
   protected
     def load_resource
-      @tag = Tag.find params[:id]
+      @tag = @account.tags.find params[:id]
     end
 
     def tag_params

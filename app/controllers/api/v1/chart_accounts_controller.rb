@@ -1,14 +1,14 @@
 class Api::V1::ChartAccountsController < ApplicationController
   before_action :authenticate_api_v1_user!
+  before_action :require_account!
   before_action :load_resource, except: [:index, :create]
 
   def index
-    @chart_accounts = ChartAccount.all
+    @chart_accounts = @account.chart_accounts
   end
 
   def create
-    @chart_account = ChartAccount.new chart_account_params
-    @chart_account.account_id = current_api_v1_user.account_id
+    @chart_account = @account.chart_accounts.new chart_account_params
 
     if @chart_account.save
       render :show
@@ -35,7 +35,7 @@ class Api::V1::ChartAccountsController < ApplicationController
 
   protected
     def load_resource
-      @chart_account = ChartAccount.find params[:id]
+      @chart_account = @account.chart_accounts.find params[:id]
     end
 
     def chart_account_params

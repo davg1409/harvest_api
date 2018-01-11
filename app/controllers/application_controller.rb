@@ -19,4 +19,15 @@ class ApplicationController < ActionController::API
         error: "Record Not Found!"
       }, status: 404 and return
     end
+
+    def require_account!
+      @account = current_api_v1_user.try(:account)
+
+      if @account.blank?
+        render json: {
+          success: false, 
+          error: "User account not found!!!"
+        }, status: 404 and return
+      end
+    end
 end
