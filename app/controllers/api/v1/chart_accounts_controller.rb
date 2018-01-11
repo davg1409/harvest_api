@@ -8,6 +8,7 @@ class Api::V1::ChartAccountsController < ApplicationController
 
   def create
     @chart_account = ChartAccount.new chart_account_params
+    @chart_account.account_id = current_api_v1_user.account_id
 
     if @chart_account.save
       render :show

@@ -1,4 +1,4 @@
-json.extract! chart_account, :id, :name, :code, :editable, :deletable, :dc, :balance
+json.extract! chart_account, :id, :name, :code, :editable, :deletable, :dc, :balance, :account_id
 json.parent do
   json.extract! chart_account.parent, :id, :name if chart_account.parent.present?
 end

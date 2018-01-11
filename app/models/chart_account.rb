@@ -2,6 +2,7 @@ class ChartAccount < ApplicationRecord
   belongs_to :parent, class_name: "ChartAccount", optional: true
   belongs_to :classification, class_name: "ChartAccountClassification", optional: true
 
+  belongs_to :account, optional: true
   has_many :chart_accounts, foreign_key: :parent_id
 
   validates_presence_of :name
