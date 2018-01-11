@@ -1,0 +1,1 @@
+json.array! @chart_accounts, partial: 'detail', as: :chart_account

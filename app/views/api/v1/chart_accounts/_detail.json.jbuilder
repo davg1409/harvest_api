@@ -1,0 +1,1 @@
+json.extract! chart_account, :id, :name, :parent_id, :classification_id, :code, :editable, :deletable, :dc, :balance

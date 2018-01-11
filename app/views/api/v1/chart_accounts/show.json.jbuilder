@@ -1,0 +1,1 @@
+json.partial! 'detail', chart_account: @chart_account
