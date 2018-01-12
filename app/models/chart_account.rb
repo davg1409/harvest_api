@@ -5,8 +5,8 @@ class ChartAccount < ApplicationRecord
   belongs_to :account, optional: true
   has_many :chart_accounts, foreign_key: :parent_id
 
-  validates_presence_of :name
-  validates_uniqueness_of :name, scope: :classification_id
+  validates_presence_of :name, :account
+  validates_uniqueness_of :name, scope: :account_id
 
   before_create :inherit_from_parent
 
