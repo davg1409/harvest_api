@@ -4,5 +4,6 @@ class Account < ActiveRecord::Base
   has_many :chart_accounts
   has_many :tags
   has_many :entries
+  has_many :transactions
   has_one :user
 end

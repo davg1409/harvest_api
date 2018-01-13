@@ -7,9 +7,10 @@ Rails.application.routes.draw do
 
       resources :chart_account_classifications
       resources :chart_accounts
+      resources :entries, only: [:index, :create]
       resources :tag_kinds
       resources :tags
-      resources :entries, only: [:index, :create]
+      resources :transactions
     end
   end
 end

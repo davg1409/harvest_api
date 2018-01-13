@@ -1,0 +1,1 @@
+json.extract! transaction, :id, :name, :date, :note, :account_id, :entry_type, :is_system, :is_reconciled, :is_confirmed, :is_closing, :amount, :currency_code
