@@ -2,6 +2,10 @@ class Api::V1::EntriesController < ApplicationController
   before_action :authenticate_api_v1_user!
   before_action :require_account!
 
+  def index
+    @entries = Search::EntrySearch.search params
+  end
+
   def create
     @entry = @account.entries.new entry_params
 

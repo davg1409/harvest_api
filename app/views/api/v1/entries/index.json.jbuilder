@@ -1,0 +1,1 @@
+json.array! @entries, partial: 'detail', as: :entry
