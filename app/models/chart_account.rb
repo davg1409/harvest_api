@@ -12,6 +12,7 @@ class ChartAccount < ApplicationRecord
   validates_uniqueness_of :name, scope: :account_id
 
   before_create :inherit_from_parent
+  after_destroy :update_parent_for_children!
 
   protected
     def inherit_from_parent
@@ -19,5 +20,9 @@ class ChartAccount < ApplicationRecord
         self.classification_id = self.parent.classification_id
         self.dc = self.parent.dc
       end
+    end
+
+    def update_parent_for_children!
+      self.chart_accounts.update_all parent_id: self.parent_id
     end
 end
