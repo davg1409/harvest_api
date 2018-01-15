@@ -1,0 +1,1 @@
+json.partial! 'detail', user: current_api_v1_user

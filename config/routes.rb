@@ -11,6 +11,11 @@ Rails.application.routes.draw do
       resources :tag_kinds
       resources :tags
       resources :transactions
+      resources :users, only: [] do
+        collection do
+          get :me
+        end
+      end
     end
   end
 end
