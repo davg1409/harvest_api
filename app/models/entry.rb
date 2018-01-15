@@ -6,7 +6,7 @@ class Entry < ApplicationRecord
   has_many :entry_items, dependent: :destroy
   has_many :chart_accounts
 
-  enum entry_type: [:check]
+  enum entry_type: [:check, :deposit, :expense, :transfer]
 
   accepts_nested_attributes_for :entry_items
 

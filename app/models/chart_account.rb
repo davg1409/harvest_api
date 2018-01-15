@@ -5,7 +5,7 @@ class ChartAccount < ApplicationRecord
   belongs_to :account, optional: true
   has_many :chart_accounts, foreign_key: :parent_id
 
-  has_many :entry_items, dependent: :destroy
+  has_many :entry_items
   has_many :entries, through: :entry_items
 
   validates_presence_of :name, :account
