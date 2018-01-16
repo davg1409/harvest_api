@@ -30,4 +30,10 @@ class ApplicationController < ActionController::API
         }, status: 404 and return
       end
     end
+
+    def render_success!
+      render json: {
+        success: true
+      }, status: 200
+    end
 end

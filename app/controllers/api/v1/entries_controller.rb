@@ -25,6 +25,14 @@ class Api::V1::EntriesController < ApplicationController
     end
   end
 
+  def destroy
+    if @entry.destroy
+      render_success!
+    else
+      render json: { errors: @entry.errors.full_messages }, status: 422
+    end 
+  end
+
   protected
     def load_resource
       @entry = @account.entries.find params[:id]      
