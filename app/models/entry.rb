@@ -23,4 +23,8 @@ class Entry < ApplicationRecord
     join(:chart_account_id, target: EntryItem, type: :integer, join: { from: :entry_id, to: :id })
     join(:tag_ids, prefix: "items", target: EntryItem, type: :integer, join: { from: :entry_id, to: :id })
   end
+
+  def set_confirm! confirm
+    self.update is_confirmed: (confirm == "true" || confirm == "1")
+  end
 end

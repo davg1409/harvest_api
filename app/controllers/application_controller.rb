@@ -36,4 +36,10 @@ class ApplicationController < ActionController::API
         success: true
       }, status: 200
     end
+
+    def unprocessable_entity!
+      render json: {
+        success: false
+      }, status: 422
+    end
 end

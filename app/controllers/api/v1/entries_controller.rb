@@ -33,6 +33,14 @@ class Api::V1::EntriesController < ApplicationController
     end 
   end
 
+  def confirm
+    if @entry.set_confirm! params[:confirm]
+      render_success!
+    else
+      unprocessable_entity!
+    end
+  end
+
   protected
     def load_resource
       @entry = @account.entries.find params[:id]      

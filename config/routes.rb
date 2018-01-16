@@ -7,7 +7,12 @@ Rails.application.routes.draw do
 
       resources :chart_account_classifications
       resources :chart_accounts
-      resources :entries, except: [:show, :new, :edit]
+      resources :entries, except: [:show, :new, :edit] do
+        member do
+          post :confirm
+        end
+      end
+
       resources :tag_kinds
       resources :tags
       resources :transactions
