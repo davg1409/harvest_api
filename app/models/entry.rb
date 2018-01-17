@@ -5,6 +5,7 @@ class Entry < ApplicationRecord
   has_many :tags, through: :entry_tags
   has_many :entry_items, dependent: :destroy
   has_many :chart_accounts
+  has_many :attachments
 
   enum entry_type: [:check, :deposit, :expense, :transfer, :custom]
 

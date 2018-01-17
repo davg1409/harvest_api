@@ -9,6 +9,7 @@ class Api::V1::EntriesController < ApplicationController
 
   def create
     @entry = @account.entries.new entry_params
+    @entry.attachments.build document: params[:entry][:document] if params[:entry][:document].present?
 
     if @entry.save
       render :show
