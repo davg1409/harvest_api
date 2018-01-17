@@ -14,17 +14,6 @@ class Entry < ApplicationRecord
   validates_presence_of :account, :entry_type, :name, :date, :amount
   validates_uniqueness_of :name, scope: :account_id
 
-  # solr searchable block
-  searchable auto_index: true, auto_remove: true do
-    integer :id
-    boolean :is_confirmed
-    time    :date
-    integer :tag_ids, multiple: true
-
-    join(:chart_account_id, target: EntryItem, type: :integer, join: { from: :entry_id, to: :id })
-    join(:tag_ids, prefix: "items", target: EntryItem, type: :integer, join: { from: :entry_id, to: :id })
-  end
-
   def set_confirm! confirm
     self.update is_confirmed: (confirm == "true" || confirm == "1")
   end
