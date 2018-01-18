@@ -1,1 +1,0 @@
-json.array! @attachments, partial: 'api/v1/attachments/detail', as: :attachment
