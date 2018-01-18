@@ -12,6 +12,8 @@ Rails.application.routes.draw do
         member do
           post :confirm
         end
+
+        resources :attachments, only: :index
       end
 
       resources :tag_kinds
