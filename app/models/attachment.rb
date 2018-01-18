@@ -3,15 +3,16 @@ class Attachment < ApplicationRecord
 
   mount_uploader :document, DocumentUploader
 
-  def filename
-    self.document.filename
+  validates_presence_of :filename, :document
+
+  after_save :update_url!
+
+  def full_url
+    "#{self.document.get_host}#{self.url}"
   end
 
-  def url
-    "#{self.document.get_host}#{self.document.url}"
-  end
-
-  def thumbnail
-    self.document.url(:thumb)
-  end
+  protected
+    def update_url!
+      self.update_attribute :url, self.document.url
+    end
 end

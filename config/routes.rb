@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks]
 
+      resources :attachments, only: :create
       resources :chart_account_classifications
       resources :chart_accounts
       resources :entries, except: [:show, :new, :edit] do
