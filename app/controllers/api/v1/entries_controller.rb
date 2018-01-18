@@ -4,7 +4,7 @@ class Api::V1::EntriesController < ApplicationController
   before_action :load_resource, except: [:index, :create]
 
   def index
-    @entries = @account.entries
+    @entries = Search::EntrySearch.search @account, params
   end
 
   def create

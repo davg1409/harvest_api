@@ -1,15 +1,16 @@
 class Search::EntrySearch
-  attr_accessor :is_confirmed, :chart_account_id, :end_date, :start_date, :tag_ids
+  attr_accessor :is_confirmed, :chart_account_id, :end_date, :start_date, :tag_ids, :account
 
   # class methods
   class << self
-    def search params = {}
-      self.new(params).search
+    def search account, params = {}
+      self.new(account, params).search
     end
   end
 
   # instance methods
-  def initialize params = {}
+  def initialize account, params = {}
+    @account = account
 
     if params[:status].present?
       @is_confirmed = params[:status] == "complete"  
@@ -25,17 +26,14 @@ class Search::EntrySearch
   end
 
   def search
-    Entry.search do
-      with :is_confirmed, is_confirmed if !is_confirmed.nil?
-      with(:date).less_than_or_equal_to end_date if end_date.present?
-      with(:date).greater_than start_date if start_date.present?
-      with :chart_account_id, chart_account_id if chart_account_id.present?
+    results = account.entries.joins(:entry_items).includes(:entry_items, :attachments, :tags)
+    results = results.where(is_confirmed: is_confirmed) if !is_confirmed.nil?
+    results = results.where("date <= ? ", end_date) if end_date.present?
+    results = results.where("date >= ? ", start_date) if start_date.present?
+    results = results.where("entry_items.chart_account_id = ?", chart_account_id) if chart_account_id.present?
 
-      if tag_ids.present?
-        any_of do
-          with :tag_ids, tag_ids
-        end
-      end
-    end.results
+    results = results.joins({entry_tags: :tag}, entry_items: {entry_item_tags: :tag}).where("tags.id IN (?)", tag_ids) if tag_ids.present?
+
+    results
   end
 end
