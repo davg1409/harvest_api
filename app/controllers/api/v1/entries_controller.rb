@@ -9,9 +9,9 @@ class Api::V1::EntriesController < ApplicationController
 
   def create
     @entry = @account.entries.new entry_params
-    @entry.attachments.build document: params[:entry][:document] if params[:entry][:document].present?
 
     if @entry.save
+      Attachment.where(id: params[:entry][:attachments]).update_all(entry_id: @entry.id)
       render :show
     else
       render json: { errors: @entry.errors.full_messages }, status: 422
@@ -20,6 +20,8 @@ class Api::V1::EntriesController < ApplicationController
 
   def update
     if @entry.update entry_update_params
+      @entry.update_attachments params[:entry][:attachments]
+      @entry.reload
       render :show
     else
       render json: { errors: @entry.errors.full_messages }, status: 422

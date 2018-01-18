@@ -17,4 +17,13 @@ class Entry < ApplicationRecord
   def set_confirm! confirm
     self.update is_confirmed: (confirm == "true" || confirm == "1")
   end
+
+  def update_attachments attachments
+    attachments || []
+
+    if attachments.present?
+      self.attachments.update_all entry_id: nil
+      Attachment.where(id: attachments).update_all(entry_id: self.id)  
+    end
+  end
 end
