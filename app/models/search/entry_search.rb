@@ -18,8 +18,8 @@ class Search::EntrySearch
 
     @chart_account_id = params[:chart_account_id]
 
-    @end_date = Date.strptime(params[:end_date], "%y-%m-%d") - 1.day rescue nil if params[:end_date].present?
-    @start_date = Date.strptime(params[:start_date], "%y-%m-%d") rescue nil if params[:start_date].present?
+    @end_date = Date.strptime(params[:end_date], "%Y-%m-%d") rescue nil if params[:end_date].present?
+    @start_date = Date.strptime(params[:start_date], "%Y-%m-%d") rescue nil if params[:start_date].present?
 
     @tag_ids = params[:tags] || []
     @tag_ids = [] if !@tag_ids.is_a?(Array)
