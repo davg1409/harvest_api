@@ -26,14 +26,14 @@ class Search::EntrySearch
   end
 
   def search
-    results = account.entries.joins(:entry_items).includes(:entry_items, :attachments, :tags)
+    results = account.entries.joins(:entry_items)
     results = results.where(is_confirmed: is_confirmed) if !is_confirmed.nil?
     results = results.where("date <= ? ", end_date) if end_date.present?
     results = results.where("date >= ? ", start_date) if start_date.present?
     results = results.where("entry_items.chart_account_id = ?", chart_account_id) if chart_account_id.present?
 
     results = results.joins({entry_tags: :tag}, entry_items: {entry_item_tags: :tag}).where("tags.id IN (?)", tag_ids) if tag_ids.present?
-
-    results
+    
+    account.entries.where(id: results.map(&:id)).includes(:entry_items, :attachments, :tags)
   end
 end
