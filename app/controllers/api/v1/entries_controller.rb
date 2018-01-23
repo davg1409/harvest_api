@@ -9,7 +9,7 @@ class Api::V1::EntriesController < ApplicationController
 
   def create
     @entry = @account.entries.new entry_params
-
+    
     if @entry.save
       Attachment.where(id: params[:entry][:attachments]).update_all(entry_id: @entry.id)
       render :show
@@ -51,7 +51,7 @@ class Api::V1::EntriesController < ApplicationController
 
     def entry_params
       params[:entry][:entry_items_attributes] = params[:entry][:items] if params[:entry].present?
-      params.require(:entry).permit(:date, :name, :note, :amount, :entry_type, tag_ids: [],   entry_items_attributes: [:amount, :dc, :chart_account_id, tag_ids: []])
+      params.require(:entry).permit(:date, :date_end, :name, :note, :amount, :entry_type, tag_ids: [], entry_items_attributes: [:amount, :dc, :chart_account_id, tag_ids: []])
     end
 
     def entry_update_params

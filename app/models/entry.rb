@@ -14,6 +14,9 @@ class Entry < ApplicationRecord
   validates_presence_of :account, :entry_type, :name, :date, :amount
   validates_uniqueness_of :name, scope: :account_id
 
+  validates :date_end, presence: true, if: :transfer?
+  before_save :update_date_end!
+
   def set_confirm! confirm
     self.update is_confirmed: (confirm == "true" || confirm == "1")
   end
@@ -26,4 +29,9 @@ class Entry < ApplicationRecord
       Attachment.where(id: attachments).update_all(entry_id: self.id)  
     end
   end
+
+  protected
+    def update_date_end!
+      self.date_end = nil unless self.transfer?
+    end
 end
