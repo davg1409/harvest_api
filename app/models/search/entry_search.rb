@@ -1,5 +1,5 @@
 class Search::EntrySearch
-  attr_accessor :is_confirmed, :chart_account_id, :end_date, :start_date, :tag_ids, :account
+  attr_accessor :is_confirmed, :chart_account_id, :end_date, :start_date, :tag_ids, :account, :direction
 
   # class methods
   class << self
@@ -23,6 +23,18 @@ class Search::EntrySearch
 
     @tag_ids = params[:tags] || []
     @tag_ids = [] if !@tag_ids.is_a?(Array)
+    @sort = params[:sort] || "date"
+
+    @direction = params[:direction] == 'asc' ? params[:direction] : "desc"
+  end
+
+  def sort
+    case @sort
+    when  "amount", "name"
+      @sort
+    else
+      @sort = "date"      
+    end
   end
 
   def search
@@ -33,7 +45,8 @@ class Search::EntrySearch
     results = results.where("entry_items.chart_account_id = ?", chart_account_id) if chart_account_id.present?
 
     results = results.joins({entry_tags: :tag}, entry_items: {entry_item_tags: :tag}).where("tags.id IN (?)", tag_ids) if tag_ids.present?
-    
-    account.entries.where(id: results.map(&:id)).includes(:entry_items, :attachments, :tags)
+  
+    results = account.entries.where(id: results.map(&:id)).includes(:entry_items, :attachments, :tags)
+    results.order("#{sort} #{direction}")
   end
 end
