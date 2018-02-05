@@ -13,7 +13,7 @@ class Search::EntrySearch
     @account = account
 
     if params[:status].present?
-      @is_confirmed = params[:status] == "complete"  
+      @is_confirmed = params[:status].to_s.downcase == "complete"  
     end
 
     @chart_account_id = params[:chart_account_id]
