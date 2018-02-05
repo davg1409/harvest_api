@@ -13,7 +13,7 @@ class Search::EntrySearch
     @account = account
 
     if params[:status].present?
-      @is_confirmed = params[:status].to_s.downcase == "complete"  
+      @is_confirmed = params[:status].to_s.downcase == "complete"
     end
 
     @chart_account_id = params[:chart_account_id]
@@ -43,10 +43,12 @@ class Search::EntrySearch
     results = results.where("date <= ? ", end_date) if end_date.present?
     results = results.where("date >= ? ", start_date) if start_date.present?
     results = results.where("entry_items.chart_account_id = ?", chart_account_id) if chart_account_id.present?
-
-    results = results.joins({entry_tags: :tag}, entry_items: {entry_item_tags: :tag}).where("tags.id IN (?)", tag_ids) if tag_ids.present?
-  
-    results = account.entries.where(id: results.map(&:id)).includes(:entry_items, :attachments, :tags)
-    results.order("#{sort} #{direction}")
+    
+    if tag_ids.present?
+      results = results.joins("LEFT JOIN entry_tags ON entry_tags.entry_id = entries.id LEFT JOIN tags ON tags.id = entry_tags.tag_id")
+                        .joins("LEFT JOIN entry_item_tags ON entry_item_tags.entry_item_id = entry_items.id LEFT JOIN tags i_tags ON i_tags.id = entry_item_tags.tag_id")    
+      results = results.where("tags.id IN (?) or i_tags.id IN (?)", tag_ids, tag_ids)
+    end
+    account.entries.where(id: results.map(&:id)).includes(:entry_items, :attachments, :tags).order("#{sort} #{direction}")
   end
 end
