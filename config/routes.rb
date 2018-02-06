@@ -12,6 +12,10 @@ Rails.application.routes.draw do
         member do
           post :confirm
         end
+
+        collection do
+          delete :destroy_group, path: "/"
+        end
       end
 
       resources :tag_kinds

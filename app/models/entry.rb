@@ -2,10 +2,9 @@ class Entry < ApplicationRecord
   belongs_to :account
 
   has_many :entry_tags, dependent: :destroy
-  has_many :tags, through: :entry_tags
+  has_many :tags, through: :entry_tags, dependent: :destroy
   has_many :entry_items, dependent: :destroy
-  has_many :chart_accounts
-  has_many :attachments
+  has_many :attachments, dependent: :destroy
 
   enum entry_type: [:check, :deposit, :expense, :transfer, :custom]
 

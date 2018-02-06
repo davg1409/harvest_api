@@ -1,7 +1,7 @@
 class Api::V1::EntriesController < ApplicationController
   before_action :authenticate_api_v1_user!
   before_action :require_account!
-  before_action :load_resource, except: [:index, :create]
+  before_action :load_resource, except: [:index, :create, :destroy_group]
 
   def index
     @entries = Search::EntrySearch.search @account, params
@@ -38,6 +38,14 @@ class Api::V1::EntriesController < ApplicationController
 
   def confirm
     if @entry.set_confirm! params[:confirm]
+      render_success!
+    else
+      unprocessable_entity!
+    end
+  end
+
+  def destroy_group
+    if @account.entries.where(id: params[:entry_ids]).destroy_all
       render_success!
     else
       unprocessable_entity!
