@@ -24,7 +24,7 @@ class ChartAccount < ApplicationRecord
       goods_sold = ChartAccount.create name: "Cost of Goods Sold", classification_id: 22, editable: true, deletable: false, account_id: account_id
       expenses = ChartAccount.create name: "Expenses", classification_id: 23, editable: true, deletable: false, account_id: account_id
       other_expenses = ChartAccount.create name: "Other Expenses", classification_id: 25, editable: true, deletable: false, account_id: account_id
-      other_expenses = ChartAccount.create name: "Ask My Accountant", classification_id: 27, editable: true, deletable: false, account_id: account_id
+      ask_my_accountant = ChartAccount.create name: "Ask My Accountant", classification_id: 27, editable: true, deletable: false, account_id: account_id
 
       current_asset = asset.chart_accounts.create(name: "Current Assets", classification_id: 2, editable: true, deletable: false, account_id: account_id)
       fixed_asset = asset.chart_accounts.create(name: "Fixed Assets", classification_id: 8, editable: true, deletable: false, account_id: account_id)
