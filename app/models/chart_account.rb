@@ -460,6 +460,14 @@ class ChartAccount < ApplicationRecord
     end
   end
 
+  def increase_balance! amt
+    self.update_attribute :balance, ((balance || 0.0) + amt)
+  end
+
+  def decrease_balance! amt
+    self.update_attribute :balance, ((balance || 0.0) - amt)
+  end
+
   protected
     def inherit_from_parent
       if self.parent.present?
