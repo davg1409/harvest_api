@@ -46,7 +46,7 @@ class Search::EntrySearch
     
     if tag_ids.present?
       results = results.joins("LEFT JOIN entry_tags ON entry_tags.entry_id = entries.id LEFT JOIN tags ON tags.id = entry_tags.tag_id")
-                        .joins("LEFT JOIN entry_item_tags ON entry_item_tags.entry_item_id = entry_items.id LEFT JOIN tags i_tags ON i_tags.id = entry_item_tags.tag_id")    
+                        .joins("LEFT JOIN entry_item_tags ON entry_item_tags.entry_item_id = entry_items.id LEFT JOIN tags i_tags ON i_tags.id = entry_item_tags.tag_id")
       results = results.where("tags.id IN (?) or i_tags.id IN (?)", tag_ids, tag_ids)
     end
     account.entries.where(id: results.map(&:id)).includes(:entry_items, :attachments, :tags).order("#{sort} #{direction}")
