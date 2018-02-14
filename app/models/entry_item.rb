@@ -8,8 +8,8 @@ class EntryItem < ApplicationRecord
   validates_presence_of :dc, :chart_account, :amount
   validates_inclusion_of :dc, in: %w(d c)
 
-  after_create :set_chart_account_balance!
-  after_update :update_chart_account_balance!
+  after_create :redo_chart_account_balance!, if: :entry_is_confirmed
+  after_update :update_chart_account_balance!, if: :entry_is_confirmed
   after_destroy :undo_chart_account_balance!, if: :entry_is_confirmed
   
   delegate :is_confirmed, to: :entry, prefix: true
@@ -38,25 +38,21 @@ class EntryItem < ApplicationRecord
     self.debit? ? self.decrease_balance!(self.amount) : self.increase_balance!(self.amount)
   end
 
-  private
-    def set_chart_account_balance!
-      if self.entry_is_confirmed  
-        self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
-      end
-    end
+  def redo_chart_account_balance!
+    self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
+  end
 
+  private
     def update_chart_account_balance!
-      if self.entry_is_confirmed
-        if self.amount_changed? && self.dc_changed? && self.amount_was != nil && self.dc_was != nil
-          self.dc_was == "d" ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)        
-          self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
-        elsif self.amount_changed? && self.amount_was != nil
-          self.debit? ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)
-          self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
-        elsif self.dc_changed? && self.dc_was != nil
-          self.dc_was == "d" ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)
-          self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
-        end
+      if self.amount_changed? && self.dc_changed? && self.amount_was != nil && self.dc_was != nil
+        self.dc_was == "d" ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)
+        self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
+      elsif self.amount_changed? && self.amount_was != nil
+        self.debit? ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)
+        self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
+      elsif self.dc_changed? && self.dc_was != nil
+        self.dc_was == "d" ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)
+        self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
       end
     end
 end

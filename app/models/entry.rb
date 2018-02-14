@@ -17,7 +17,16 @@ class Entry < ApplicationRecord
   before_save :update_date_end!
 
   def set_confirm! confirm
+    old_confirm = self.is_confirmed
     self.update is_confirmed: (confirm == "true" || confirm == "1")
+
+    if self.is_confirmed && !old_confirm
+      self.entry_items.each(&:redo_chart_account_balance!)
+    elsif !self.is_confirmed && old_confirm
+      self.entry_items.each(&:undo_chart_account_balance!)
+    end
+
+    return true
   end
 
   def update_attachments attachments
