@@ -8,7 +8,9 @@ class EntryItem < ApplicationRecord
   validates_presence_of :dc, :chart_account, :amount
   validates_inclusion_of :dc, in: %w(d c)
 
-  before_save :update_chart_account_balance!
+  after_create :set_chart_account_balance!
+  after_update :update_chart_account_balance!
+  after_destroy :undo_chart_account_balance!
   
   delegate :is_confirmed, to: :entry, prefix: true
 
@@ -20,22 +22,43 @@ class EntryItem < ApplicationRecord
     self.dc == "c"
   end
 
+  def increase_balance! amt
+    # reload to avoid cache data for using different callbacks by same self object.
+    self.chart_account.reload
+    self.chart_account.increase_balance! amt
+  end
+
+  def decrease_balance! amt
+    # reload to avoid cache data for using different callbacks by same self object.
+    self.chart_account.reload
+    self.chart_account.decrease_balance! amt
+  end
+
   private
+    def set_chart_account_balance!
+      if self.entry_is_confirmed  
+        self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
+      end
+    end
+
     def update_chart_account_balance!
       if self.entry_is_confirmed
-        
-        if self.new_record?
-          self.debit? ? self.chart_account.increase_balance!(self.amount) : self.chart_account.decrease_balance!(self.amount)
-        elsif self.amount_changed? && self.dc_changed? && self.amount_was != nil && self.dc_was != nil
-          self.dc_was == "d" ? self.chart_account.decrease_balance!(self.amount_was) : self.chart_account.increase_balance!(self.amount_was)        
-          self.debit? ? self.chart_account.increase_balance!(self.amount) : self.chart_account.decrease_balance!(self.amount)
+        if self.amount_changed? && self.dc_changed? && self.amount_was != nil && self.dc_was != nil
+          self.dc_was == "d" ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)        
+          self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
         elsif self.amount_changed? && self.amount_was != nil
-          self.debit? ? self.chart_account.decrease_balance!(self.amount_was) : self.chart_account.increase_balance!(self.amount_was)
-          self.debit? ? self.chart_account.increase_balance!(self.amount) : self.chart_account.decrease_balance!(self.amount)
+          self.debit? ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)
+          self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
         elsif self.dc_changed? && self.dc_was != nil
-          self.dc_was == "d" ? self.chart_account.decrease_balance!(self.amount_was) : self.chart_account.increase_balance!(self.amount_was)
-          self.debit? ? self.chart_account.increase_balance!(self.amount) : self.chart_account.decrease_balance!(self.amount)
+          self.dc_was == "d" ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)
+          self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
         end
+      end
+    end
+
+    def undo_chart_account_balance!
+      if self.entry_is_confirmed
+        self.debit? ? self.decrease_balance!(self.amount) : self.increase_balance!(self.amount)
       end
     end
 end

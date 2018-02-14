@@ -461,11 +461,11 @@ class ChartAccount < ApplicationRecord
   end
 
   def increase_balance! amt
-    self.update_attribute :balance, ((balance || 0.0) + amt)
+    self.update_attribute :balance, ((self.balance || 0.0) + amt)
   end
 
   def decrease_balance! amt
-    self.update_attribute :balance, ((balance || 0.0) - amt)
+    self.update_attribute :balance, ((self.balance || 0.0) - amt)
   end
 
   protected
