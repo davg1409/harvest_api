@@ -10,7 +10,7 @@ class EntryItem < ApplicationRecord
 
   after_create :set_chart_account_balance!
   after_update :update_chart_account_balance!
-  after_destroy :undo_chart_account_balance!
+  after_destroy :undo_chart_account_balance!, if: :entry_is_confirmed
   
   delegate :is_confirmed, to: :entry, prefix: true
 
@@ -34,6 +34,10 @@ class EntryItem < ApplicationRecord
     self.chart_account.decrease_balance! amt
   end
 
+  def undo_chart_account_balance!
+    self.debit? ? self.decrease_balance!(self.amount) : self.increase_balance!(self.amount)
+  end
+
   private
     def set_chart_account_balance!
       if self.entry_is_confirmed  
@@ -53,12 +57,6 @@ class EntryItem < ApplicationRecord
           self.dc_was == "d" ? self.decrease_balance!(self.amount_was) : self.increase_balance!(self.amount_was)
           self.debit? ? self.increase_balance!(self.amount) : self.decrease_balance!(self.amount)
         end
-      end
-    end
-
-    def undo_chart_account_balance!
-      if self.entry_is_confirmed
-        self.debit? ? self.decrease_balance!(self.amount) : self.increase_balance!(self.amount)
       end
     end
 end
