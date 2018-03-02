@@ -110,9 +110,9 @@ class ChartAccount < ApplicationRecord
 
       current_liabilities = liabilities.chart_accounts.create(name: "Current Liabilities", classification_id: 12, editable: true, deletable: false, account_id: account_id)
       long_term_liabilities = liabilities.chart_accounts.create(name: "Long-Term Liabilities", classification_id: 16, editable: true, deletable: false, account_id: account_id)
-      credit_account = long_term_liabilities.chart_accounts.create(name: "Credit Accounts", classification_id: 13, editable: true, deletable: false, account_id: account_id)
-      account_payable = long_term_liabilities.chart_accounts.create(name: "Accounts Payable", classification_id: 14, editable: true, deletable: false, account_id: account_id)
-      unearned_revenue = long_term_liabilities.chart_accounts.create(name: "Unearned Revenue", classification_id: 15, editable: true, deletable: false, account_id: account_id)
+      credit_account = current_liabilities.chart_accounts.create(name: "Credit Accounts", classification_id: 13, editable: true, deletable: false, account_id: account_id)
+      account_payable = current_liabilities.chart_accounts.create(name: "Accounts Payable", classification_id: 14, editable: true, deletable: false, account_id: account_id)
+      unearned_revenue = current_liabilities.chart_accounts.create(name: "Unearned Revenue", classification_id: 15, editable: true, deletable: false, account_id: account_id)
         
       account_payable.chart_accounts.create([{
           "name": "Payroll Payable",
