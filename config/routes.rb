@@ -21,6 +21,8 @@ Rails.application.routes.draw do
       resources :tag_kinds
       resources :tags
       resources :transactions
+      resources :customers
+      resources :vendors
       resources :users, only: [] do
         collection do
           get :me
