@@ -1,1 +1,1 @@
-json.extract! vendor, :id, :name
+json.extract! vendor, :id, :name, :title, :first_name, :middle_name, :last_name, :suffix, :company, :display_name, :print_name, :street, :city, :state, :zipcode, :country, :notes, :email, :phone, :mobile, :fax, :other, :website, :terms, :opening_balance, :opening_balance_date, :account_number, :business_id, :track_payments

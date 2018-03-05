@@ -16,7 +16,7 @@ class Api::V1::CustomersController < ApplicationController
   # POST /customers
   # POST /customers.json
   def create
-    @customer = Customer.new(customer_params)
+    @customer = Customer.new customer_params
 
     if @customer.save
       render :show
@@ -28,7 +28,7 @@ class Api::V1::CustomersController < ApplicationController
   # PATCH/PUT /customers/1
   # PATCH/PUT /customers/1.json
   def update
-    if @customer.update(customer_params)
+    if @customer.update customer_params
       render :show
     else
       render json: { errors: @customer.errors.full_messages }, status: 422
@@ -53,6 +53,16 @@ class Api::V1::CustomersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def customer_params
-      params.require(:customer).permit(:name)
+      params.require(:customer).permit!
+    end
+
+    def permit!
+      each_pair do |key, value|
+        convert_hashes_to_parameters(key, value)
+        self[key].permit! if self[key].respond_to? :permit!
+      end
+    
+      @permitted = true
+      self
     end
 end

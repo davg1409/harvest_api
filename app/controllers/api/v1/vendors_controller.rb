@@ -53,6 +53,16 @@ class Api::V1::VendorsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def vendor_params
-      params.require(:vendor).permit(:name)
+      params.require(:vendor).permit!
+    end
+    
+    def permit!
+      each_pair do |key, value|
+        convert_hashes_to_parameters(key, value)
+        self[key].permit! if self[key].respond_to? :permit!
+      end
+    
+      @permitted = true
+      self
     end
 end
