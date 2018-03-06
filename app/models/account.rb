@@ -5,6 +5,8 @@ class Account < ActiveRecord::Base
   has_many :tags
   has_many :entries
   has_many :transactions
+  has_many :customers
+  has_many :vendors
   has_one :user
 
   after_create :create_default_chart_accounts!

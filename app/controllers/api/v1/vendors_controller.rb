@@ -1,11 +1,12 @@
 class Api::V1::VendorsController < ApplicationController
   before_action :authenticate_api_v1_user!
+  before_action :require_account!
   before_action :set_vendor, except: [:index, :create]
 
   # GET /vendors
   # GET /vendors.json
   def index
-    @vendors = Vendor.all
+    @vendors = @account.vendors
   end
 
   # GET /vendors/1
@@ -16,7 +17,7 @@ class Api::V1::VendorsController < ApplicationController
   # POST /vendors
   # POST /vendors.json
   def create
-    @vendor = Vendor.new vendor_params
+    @vendor = @account.vendors.new vendor_params
 
     if @vendor.save
       render :show
@@ -48,7 +49,7 @@ class Api::V1::VendorsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_vendor
-      @vendor = Vendor.find params[:id]
+      @vendor = @account.vendors.find params[:id]
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

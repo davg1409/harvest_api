@@ -1,11 +1,12 @@
 class Api::V1::CustomersController < ApplicationController
   before_action :authenticate_api_v1_user!
+  before_action :require_account!
   before_action :set_customer, except: [:index, :create]
 
   # GET /customers
   # GET /customers.json
   def index
-    @customers = Customer.all
+    @customers = @account.customers
   end
 
   # GET /customers/1
@@ -16,7 +17,7 @@ class Api::V1::CustomersController < ApplicationController
   # POST /customers
   # POST /customers.json
   def create
-    @customer = Customer.new customer_params
+    @customer = @account.customers.new customer_params
 
     if @customer.save
       render :show
@@ -48,7 +49,7 @@ class Api::V1::CustomersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_customer
-      @customer = Customer.find(params[:id])
+      @customer = @account.customers.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
