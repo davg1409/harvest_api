@@ -59,7 +59,7 @@ class Api::V1::EntriesController < ApplicationController
 
     def entry_params
       params[:entry][:entry_items_attributes] = params[:entry][:items] if params[:entry].present?
-      params.require(:entry).permit(:date, :date_end, :name, :note, :amount, :entry_type, tag_ids: [], customer_ids: [], vendor_ids: [], entry_items_attributes: [:amount, :dc, :chart_account_id, tag_ids: [], customer_ids: [], vendor_ids: []])
+      params.require(:entry).permit(:date, :date_end, :name, :note, :amount, :entry_type, :customer_id, :vendor_id, tag_ids: [], entry_items_attributes: [:amount, :dc, :chart_account_id, tag_ids: []])
     end
 
     def entry_update_params
@@ -74,6 +74,6 @@ class Api::V1::EntriesController < ApplicationController
         end
       end
       params[:entry][:entry_items_attributes] = params[:entry][:items] if params[:entry].present?
-      params.require(:entry).permit(:date, :name, :note, :amount, :entry_type, tag_ids: [], customer_ids: [], vendor_ids: [], entry_items_attributes: [:id, :amount, :dc, :chart_account_id, :_destroy, tag_ids: [], customer_ids: [], vendor_ids: []])
+      params.require(:entry).permit(:date, :name, :note, :amount, :entry_type, :customer_id, :vendor_id, tag_ids: [], entry_items_attributes: [:id, :amount, :dc, :chart_account_id, :_destroy, tag_ids: []])
     end
 end 
