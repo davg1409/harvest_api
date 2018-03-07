@@ -4,10 +4,6 @@ class EntryItem < ApplicationRecord
 
   has_many :entry_item_tags, dependent: :destroy
   has_many :tags, through: :entry_item_tags
-  has_many :entry_item_customers, dependent: :destroy
-  has_many :customers, through: :entry_item_customers
-  has_many :entry_item_vendors, dependent: :destroy
-  has_many :vendors, through: :entry_item_vendors
 
   validates_presence_of :dc, :chart_account, :amount
   validates_inclusion_of :dc, in: %w(d c)

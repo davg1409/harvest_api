@@ -3,10 +3,6 @@ class Entry < ApplicationRecord
 
   has_many :entry_tags, dependent: :destroy
   has_many :tags, through: :entry_tags, dependent: :destroy
-  has_many :entry_customers, dependent: :destroy
-  has_many :customers, through: :entry_customers, dependent: :destroy
-  has_many :entry_vendors, dependent: :destroy
-  has_many :vendors, through: :entry_vendors, dependent: :destroy
   has_many :entry_items, dependent: :destroy
   has_many :attachments, dependent: :destroy
 
